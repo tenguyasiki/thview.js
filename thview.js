@@ -15,6 +15,7 @@ var ThView = function(arg) {
 		this.file = [arg.file];
 	}
 	this.interval = (arg.interval == undefined) ? 500 : arg.interval;		// animation rate
+	this.fadespeed = (arg.fadespeed == undefined) ? 100 : arg.fadespeed;	// fadeIn /Out speed
 
 	this.width = (arg.width == undefined) ? 500 : arg.width;				// pixel (500)
 	this.height = (arg.height == undefined) ? 300 : arg.height;				// pixel (300)
@@ -248,16 +249,58 @@ ThView.prototype.show = function() {
 	this.material = new THREE.MeshPhongMaterial({
 		side: THREE.DoubleSide,
 		color: 0xffffff, specular: 0xcccccc, shininess:50, ambient: 0xffffff,
-		map: this.texture[this.imageNo] });
+		map: this.texture[this.imageNo], transparent:true });
+
+	this._fadeOut = function(interval, countdown, callback){
+		setTimeout(function(){
+			self.material.opacity = self.material.opacity - 0.1;
+			if(countdown < 0){
+				callback();
+			}
+			else{
+				self._fadeOut(interval, countdown - interval/10 , callback);
+			}
+		}, interval);
+
+	};
+
+	this._fadeIn = function(interval, countdown, callback){
+		setTimeout(function(){
+			self.material.opacity = self.material.opacity + 0.1;
+			if(countdown < 0){
+				callback();
+			}
+			else{
+				self._fadeIn(interval, countdown - interval/10, callback);
+			}
+		}, interval);
+	};
+
+	this.nextImageWithFade = function(interval){
+		self.imageNo = (self.imageNo + 1) % self.texture.length;
+
+		fadestep = interval / 10;
+
+		self._fadeOut(
+			fadestep,
+			fadestep, 
+			function(){
+				self.material.map = self.texture[self.imageNo];
+				if (self.sync) {
+					self.sync.material.map = self.sync.texture[self.imageNo];
+				}
+				self._fadeIn(fadestep, fadestep, function(){
+					self.material.opacity = 1;
+				});
+			}
+		);
+	};
 
 	//// texture animation
 	if ((this.texture.length > 1) && (!self.isSlave)) {
 		setInterval(function() {
-			self.imageNo = (self.imageNo + 1) % self.texture.length;
-			self.material.map = self.texture[self.imageNo];
-			if (self.sync) {
-				self.sync.material.map = self.sync.texture[self.imageNo];
-			}
+//		setTimeout(function() {
+			self.nextImageWithFade(self.fadespeed);
 		}, this.interval);
 	}
 
