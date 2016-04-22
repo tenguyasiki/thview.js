@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>ThView.js - JavaScript Spherical Image Viewer</title>
-    <script type="text/javascript" src="jquery-1.12.3.min.js"></script>
-    <script type="text/javascript" src="three.min.js"></script>
-    <script type="text/javascript" src="thview.js"></script>
+    <script type="text/javascript" src="lib/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="lib/three.min.js"></script>
+    <script type="text/javascript" src="lib/thview.js"></script>
 </head>
 
 <body>
@@ -14,6 +14,8 @@
         var img1 = new ThView({
             id:'image1',
             file:'images/R0010324.JPG',
+            width: 640,
+            height: 480,
             rotation: true,
             speed: -10
         });
