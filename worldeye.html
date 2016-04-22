@@ -13,12 +13,18 @@
     <script type="text/javascript" >
         var img1 = new ThView({
             id:'image1',
-//            file:'images/R0010324.JPG',
+//            file:'images/R0010001.JPG',
             file:['images/R0010290.JPG','images/R0010349.JPG','images/R0010532.JPG','images/R0010553.JPG'],
-            interval: 10000,
-            fadespeed: 500,
+            width: 1024,//max 916
+            height: 768,
             rotation: true,
-            speed: -100
+            zoom: 110, 
+            firstview: 90,
+            speed: -50,
+            interval: 3000,
+            fadespeed: 1000,
+            rendererType: 0,
+            degree: [0, 0, 0]
         });
     </script>
 </body>
